@@ -21,12 +21,15 @@
 
 from core.webengine import BrowserBuffer
 from core.utils import interactive
+import os
 
 class AppBuffer(BrowserBuffer):
     def __init__(self, buffer_id, url, arguments):
         BrowserBuffer.__init__(self, buffer_id, url, arguments, False)
 
         self.load_index_html(__file__)
+
+        self.title = os.path.basename(url).split(".")[0]
 
     @interactive
     def sync_content(self, content):
