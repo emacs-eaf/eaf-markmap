@@ -91,7 +91,8 @@
   (eaf-open "eaf-markmap" "markmap"))
 
 (defcustom eaf-markmap-keybinding
-  '(("<f12>" . "open_devtools"))
+  '(("s"     . "save_as_screenshot")
+    ("<f12>" . "open_devtools"))
   "The keybinding of EAF Vue demo."
   :type 'cons)
 

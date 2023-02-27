@@ -14,3 +14,11 @@ This repository provides the EAF Markdown Mindmap application for the [Emacs App
 (require 'eaf)
 (require 'eaf-markmap)
 ```
+
+### The keybinding of EAF Vue demo.
+
+| Key   | Event   |
+| :---- | :------ |
+| `s` | save_as_screenshot |
+| `<f12>` | open_devtools |
+
