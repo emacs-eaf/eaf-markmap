@@ -37,6 +37,8 @@
    mounted() {
      window.syncContent = this.syncContent;
 
+     window.addEventListener("resize", this.update);
+
      this.mm = Markmap.create(this.$refs.svgRef);
      this.update();
    },
