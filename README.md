@@ -3,7 +3,7 @@
   <img width="800" src="./screenshot.png">
 </p>
 
-This repository provides the EAF Markdown Mindmap application for the [Emacs Application Framework](https://github.com/emacs-eaf/emacs-application-framework).
+This repository provides the EAF Markdown/Org Mindmap application for the [Emacs Application Framework](https://github.com/emacs-eaf/emacs-application-framework).
 
 ### Load application
 
@@ -14,6 +14,8 @@ This repository provides the EAF Markdown Mindmap application for the [Emacs App
 (require 'eaf)
 (require 'eaf-markmap)
 ```
+
+Then execute `eaf-open` command to open .md or .org file, choose `markmap` app.
 
 ### The keybinding of EAF Vue demo.
 
