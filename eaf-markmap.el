@@ -97,7 +97,7 @@
   :type 'cons)
 
 (defcustom eaf-markmap-extension-list
-  '("md")
+  '("md" "org")
   "The extension list of markmap application."
   :type 'cons)
 
@@ -114,18 +114,39 @@
   (run-with-idle-timer 1 t 'eaf--markmap-sync-content))
 
 (defun eaf--markmap-sync-content ()
-  (let ((markdown-buffer (current-buffer))
-        (markdown-buffer-file (buffer-file-name)))
-    (eaf-for-each-eaf-buffer
-     (when (and (string-equal eaf--buffer-app-name "markmap")
-                (string-equal eaf--buffer-url markdown-buffer-file))
-       (eaf-call-async "execute_function_with_args"
-                       eaf--buffer-id
-                       "sync_content"
-                       (eaf--encode-string
-                        (with-current-buffer markdown-buffer
-                          (buffer-string)))
-                       )))))
+  (save-excursion
+    (let* ((buf (current-buffer))
+           (buf-file (buffer-file-name)))
+      (eaf-for-each-eaf-buffer
+       (when (and (string-equal eaf--buffer-app-name "markmap")
+                  (string-equal eaf--buffer-url buf-file))
+         (let* ((buf-extension (file-name-extension buf-file))
+                (buf-content
+                 (pcase buf-extension
+                   ("md" (with-current-buffer buf (buffer-string)))
+                   ("org" (eaf--markmap-export-org-to-markdown buf)))))
+
+           ;; Sync file content to EAF.
+           (eaf-call-async "execute_function_with_args"
+                           eaf--buffer-id
+                           "sync_content"
+                           (eaf--encode-string buf-content))
+
+           ;; Keep select file content window.
+           (let ((content-window (get-buffer-window buf)))
+             (when content-window
+               (select-window content-window)))
+           ))))))
+
+(defun eaf--markmap-export-org-to-markdown (buf)
+  (let ((temp-buf (get-buffer-create "* eaf-markmap-org-temp*"))
+        temp-content)
+    (with-current-buffer buf
+      (org-export-to-buffer 'md (buffer-name temp-buf) nil nil nil t '(:with-toc nil) (lambda () (text-mode))))
+    (setq temp-content (with-current-buffer temp-buf
+                         (buffer-string)))
+    (kill-buffer temp-buf)
+    temp-content))
 
 (add-to-list 'eaf-app-hook-alist '("markmap" . eaf--markmap-hook))
 
