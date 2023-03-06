@@ -139,6 +139,7 @@
            ))))))
 
 (defun eaf--markmap-export-org-to-markdown (buf)
+  (require 'ox-md)
   (let ((temp-buf (get-buffer-create "* eaf-markmap-org-temp*"))
         temp-content)
     (with-current-buffer buf
