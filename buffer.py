@@ -20,7 +20,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from core.webengine import BrowserBuffer
-from core.utils import interactive
+from core.utils import interactive, PostGui
 import os
 
 class AppBuffer(BrowserBuffer):
@@ -33,4 +33,9 @@ class AppBuffer(BrowserBuffer):
 
     @interactive
     def sync_content(self, content):
+        self.sync(content)
+
+        # We need use PostGui wrap GUI code, avoid crash that call Qt code in sub-thread.
+    @PostGui()
+    def sync(self, content):
         self.buffer_widget.eval_js_function("syncContent", [content])
